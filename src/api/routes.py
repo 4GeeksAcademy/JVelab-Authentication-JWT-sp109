@@ -43,6 +43,10 @@ def login():
 def singup():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
+    is_created = db.session.execute(select(User).where(User.email == email)).scalar_one_or_none()
+
+    if is_created:
+        return jsonify({"msg": "User already on the system."}), 401
     
     if email is None:
         return jsonify({"msg": "Should introduce an e-mail."}), 401
